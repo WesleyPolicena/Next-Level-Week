@@ -27,6 +27,9 @@ function getCities(event) {
 
   const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufValue}/municipios`
 
+  citySelect.innerHTML = ""
+  citySelect.disabled = false
+
   fetch(url)
     .then(res => res.json())
     .then(cities => {
@@ -42,3 +45,38 @@ function getCities(event) {
 document
   .querySelector("[name=uf]")
   .addEventListener("change", getCities)
+
+const itemsToCollect = document.querySelectorAll(".items-grid li")
+
+for (const item of itemsToCollect) {
+  item.addEventListener("click", handleSelectedItem)
+}
+
+const collecteditems = document.querySelector("input[name=items]")
+let selectedtItems = []
+
+function handleSelectedItem(event) {
+  const itemLi = event.target
+
+  itemLi.classList.toggle("selected")
+
+  const itemID = event.target.dataset.id
+
+  const alreadySelected = selectedtItems.findIndex (item => {
+    const itemFound = item == itemId
+    return itemFound
+  })
+
+  if( alreadySelected >= 0 ) {
+    const filteredItems = selectedtItems.filter(item => {
+      const itemIsDiferent = item != itemId
+      return itemIsDiferent
+    })
+  } else {
+
+    selectedtItems.push(itemId)
+  
+  }
+
+  collecteditems.value = selectedtItems
+}
